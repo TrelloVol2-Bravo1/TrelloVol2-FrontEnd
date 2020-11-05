@@ -9,7 +9,7 @@ export default class HomeComponent extends React.Component {
     }
 
     connection = {
-        url: process.env.REACT_APP_SERVER_URL
+        url: "https://trello-back-bravo1.herokuapp.com/"
     }
     
 
