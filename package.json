@@ -17,7 +17,7 @@
     "typescript": "^3.7.5"
   },
   "scripts": {
-    "start": "env-cmd -f ./.env.dev react-scripts start",
+    "start": "env-cmd -f ./.env.prod react-scripts start",
     "start:prod": "env-cmd -f ./.env.prod react-scripts start",
     "build": "env-cmd -f ./.env.dev react-scripts build",
     "build:prod": "env-cmd -f ./.env.prod react-scripts build",
