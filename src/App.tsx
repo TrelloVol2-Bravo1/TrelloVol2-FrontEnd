@@ -1,11 +1,10 @@
-import React from 'react';
-import HomeComponent from './components/home.component';
-
+import React from "react";
+import Router from "./routes/Router";
 function App() {
 
-  return (
-    <HomeComponent></HomeComponent>
-  );
+    return (
+        <Router/>
+    );
 }
 
 export default App;

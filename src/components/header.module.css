@@ -1,0 +1,20 @@
+.header {
+    height: 80px;
+    width: 100%;
+    background: cadetblue;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+}
+
+.no-display {
+    display: none;
+}
+
+.display {
+    display: block;
+}
+
+button {
+    height: 100%;
+}
