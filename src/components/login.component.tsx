@@ -1,6 +1,9 @@
 import React from "react";
 import styles from "../styles.module.css";
 import {Link, Redirect} from "react-router-dom";
+import ApiService from "../services/api.service";
+import UserService from "../services/user.service";
+import Button from "react-bootstrap/Button";
 
 export default class LoginComponent extends React.Component {
     state = {
@@ -33,7 +36,7 @@ export default class LoginComponent extends React.Component {
 
     async login() {
         if (this.validate()) {
-            const url = process.env.REACT_APP_SERVER_URL + 'user/auth';
+            const url = ApiService.getURL() + 'user/auth';
             const requestOptions = {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
@@ -46,8 +49,7 @@ export default class LoginComponent extends React.Component {
             const response = await fetch(url, requestOptions);
             const data = await response.json();
             if (data.status_code === 'success') {
-                localStorage.setItem('x-api-key', data.api_key);
-                localStorage.setItem('x-user-id', data.user_id);
+                UserService.LogIn(data.api_key, data.user_id);
                 this.setState({redirect: true});
             } else {
                 this.setErrorMessage(data.message);
@@ -96,9 +98,9 @@ export default class LoginComponent extends React.Component {
                             {this.state.errorMessage}
                         </h3>
                         <div className={styles.buttons}>
-                            <button onClick={() => this.login()}>Login</button>
-                            <Link to="/register">
-                                <button>Register</button>
+                            <Button onClick={() => this.login()}>Login</Button>
+                            <Link to={"/register"}>
+                                <Button>Register</Button>
                             </Link>
                         </div>
                     </div>

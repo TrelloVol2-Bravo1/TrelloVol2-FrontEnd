@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./header.module.css";
 import {Redirect, Link} from "react-router-dom";
 import UserService from "../services/user.service";
+import Button from "react-bootstrap/Button";
 
 export default class HeaderComponent extends React.Component {
 
@@ -24,13 +25,13 @@ export default class HeaderComponent extends React.Component {
 
     getButtons = () => {
         if (UserService.IsAuthenticated()) {
-            return <button onClick={() => this.logout()}>Logout</button>;
+            return <Button onClick={() => this.logout()}>Logout</Button>;
         } else {
             return <><Link to={'login'}>
-                <button>Login</button>
+                <Button>Login</Button>
             </Link>
             <Link to={'register'}>
-                <button>Register</button>
+                <Button>Register</Button>
             </Link></>;
         }
     }

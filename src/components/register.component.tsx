@@ -1,13 +1,14 @@
 import React from "react";
 import styles from "../styles.module.css";
 import {Redirect} from "react-router-dom";
+import ApiService from "../services/api.service";
 
 export default class RegisterComponent extends React.Component {
     state = {
-        login: "",
+        name: "",
         password: "",
         repeatPassword: "",
-        email: "test@test.pl",
+        email: "",
         errorMessage: "",
         redirect: false
     };
@@ -26,7 +27,7 @@ export default class RegisterComponent extends React.Component {
 
     validate() {
         this.setState({errorMessage: ""});
-        if (this.state.login.length < 5) {
+        if (this.state.name.length < 5) {
             this.setErrorMessage("Login has to be at least 5 characters length.");
             return false;
         } else {
@@ -52,12 +53,12 @@ export default class RegisterComponent extends React.Component {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({
-                    name: this.state.login,
+                    name: this.state.name,
                     password: this.state.password,
                     email: this.state.email,
                 }),
             };
-            const url = process.env.REACT_APP_SERVER_URL + "user";
+            const url = ApiService.getURL() + "user";
             const response = await fetch(url, requestOptions);
             const data = await response.json();
             if (data.status_code === 'success') {
@@ -95,7 +96,7 @@ export default class RegisterComponent extends React.Component {
                             <span>Login:</span>
                             <input
                                 name={'name'}
-                                value={this.state.login}
+                                value={this.state.name}
                                 onChange={e => this.handleChange(e)}
                                 type="text"
                             />

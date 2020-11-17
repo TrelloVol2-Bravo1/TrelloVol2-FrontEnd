@@ -17,11 +17,16 @@ export default class UserService extends React.Component {
             x_user_id !== null && x_user_id !== undefined;
     }
 
+    static LogIn(x_api_key: string, x_user_id: number) {
+        localStorage.setItem('x-api-key', x_api_key);
+        localStorage.setItem('x-user-id', x_user_id.toString());
+    }
+
     static async LogOut() {
         const url = process.env.REACT_APP_SERVER_URL + 'user/auth';
         const requestOptions = {
             method: "DELETE",
-            headers: this.getHeader()
+            headers: this.GetHeaders()
         };
         const response = await fetch(url, requestOptions);
         const data = await response.json();
@@ -31,7 +36,7 @@ export default class UserService extends React.Component {
         }
     }
 
-    private static getHeader() {
+    static GetHeaders() {
         const header = new Headers();
         header.append("Content-Type", "application/json");
         header.append("x-api-key", this.getAPIkey() as string);

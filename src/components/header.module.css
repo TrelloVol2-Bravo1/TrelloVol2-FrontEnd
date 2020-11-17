@@ -4,7 +4,7 @@
     background: cadetblue;
     display: flex;
     flex-direction: row;
-    justify-content: end;
+    justify-content: flex-end;
 }
 
 .no-display {

@@ -1,5 +1,6 @@
 import React from 'react';
 import '../App.css';
+import ApiService from "../services/api.service";
 
 export default class HomeComponent extends React.Component {
 
@@ -7,11 +8,6 @@ export default class HomeComponent extends React.Component {
         loading: true,
         message: '',
     }
-
-    connection = {
-        url: "https://trello-back-bravo1.herokuapp.com/"
-    }
-
 
     async postMethod() {
         const requestOptions = {
@@ -28,19 +24,11 @@ export default class HomeComponent extends React.Component {
         }
     }
 
-    updateState = (text) => {
-        text.then(res => console.log(res))
-    }
-
     async componentDidMount() {
-        const url = this.connection.url;
+        const url = ApiService.getURL();
         const response = await fetch(url);
         const data = await response.json();
         this.setState({ message: data.message });
-    }
-
-    handleSumbit = (event) => {
-        alert(this.state.message)
     }
 
     handleChange = (event) => {
