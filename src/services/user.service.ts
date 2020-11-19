@@ -1,4 +1,5 @@
 import React from "react";
+import ApiService from "./api.service";
 
 export default class UserService extends React.Component {
 
@@ -23,7 +24,7 @@ export default class UserService extends React.Component {
     }
 
     static async LogOut() {
-        const url = process.env.REACT_APP_SERVER_URL + 'user/auth';
+        const url = ApiService.getURL() + 'user/auth';
         const requestOptions = {
             method: "DELETE",
             headers: this.GetHeaders()
@@ -41,7 +42,6 @@ export default class UserService extends React.Component {
         header.append("Content-Type", "application/json");
         header.append("x-api-key", this.getAPIkey() as string);
         header.append("x-user-id", this.getUserId() as string);
-        // header.append('Access-Control-Allow-Origin', '*');
         return header;
     }
 }

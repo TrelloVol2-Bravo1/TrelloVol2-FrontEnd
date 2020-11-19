@@ -4,6 +4,7 @@ import {TableModel} from "../models/table.model";
 export default class ApiService{
     static getURL() {
         return 'https://trello-back-bravo1.herokuapp.com/';
+        // return process.env.REACT_APP_SERVER_URL;
     }
 
     static async GetTables() {
@@ -17,6 +18,7 @@ export default class ApiService{
         const response = await fetch(ApiService.getURL() + 'table', requestOptions);
         const data = await response.json();
         for (let i = 0; i < data.data.length; i++) {
+            console.log(data.data[i].id, data.data[i].name, data.data[i].author_id);
             const table = new TableModel(data.data[i].id, data.data[i].name, data.data[i].author_id);
             tables.push(table);
         }
