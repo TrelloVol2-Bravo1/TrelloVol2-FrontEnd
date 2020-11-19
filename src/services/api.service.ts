@@ -3,7 +3,7 @@ import {TableModel} from "../models/table.model";
 
 export default class ApiService{
     static getURL() {
-        return process.env.REACT_APP_SERVER_URL;
+        return 'https://trello-back-bravo1.herokuapp.com/';
     }
 
     static async GetTables() {
@@ -17,7 +17,7 @@ export default class ApiService{
         const response = await fetch(ApiService.getURL() + 'table', requestOptions);
         const data = await response.json();
         for (let i = 0; i < data.data.length; i++) {
-            const table = new TableModel(data.data[i].table_id, data.data[i].table_name, data.data[i].user_id);
+            const table = new TableModel(data.data[i].id, data.data[i].name, data.data[i].author_id);
             tables.push(table);
         }
         return tables;
@@ -38,7 +38,7 @@ export default class ApiService{
             method: 'POST',
             headers: UserService.GetHeaders(),
             body: JSON.stringify({
-                table_name: name
+                name: name
             }),
         };
 

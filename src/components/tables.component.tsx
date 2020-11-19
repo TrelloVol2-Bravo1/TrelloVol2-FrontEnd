@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import ApiService from "../services/api.service";
 import {TableModel} from "../models/table.model";
 import styles from "./tables.module.css";
@@ -62,7 +62,7 @@ export default class TablesComponent extends React.Component {
 
     private async createTable(name: string) {
         const response = await ApiService.CreateTable(name);
-        const table = new TableModel(response.table_id, response.table_name, response.user_id);
+        const table = new TableModel(response.id, response.name, response.author_id);
         this.tables.push(table);
         this.refresh();
 

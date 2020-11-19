@@ -1,20 +1,20 @@
 export class TableModel {
-    constructor(private table_id: number, private table_name: string, private user_id: number) {
+    constructor(private id: number, private name: string, private author_id: number) {
     }
 
     getTableId(): number {
-        return this.table_id;
+        return this.id;
     }
 
     getTableName(): string {
-        return this.table_name;
+        return this.name;
     }
 
     getUserId(): number {
-        return this.user_id;
+        return this.author_id;
     }
 
     setTableName(newName: string): void {
-        this.table_name = newName;
+        this.name = newName;
     }
 }

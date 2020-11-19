@@ -2,6 +2,7 @@ import React from "react";
 import styles from "../styles.module.css";
 import {Redirect} from "react-router-dom";
 import ApiService from "../services/api.service";
+import Button from "react-bootstrap/Button";
 
 export default class RegisterComponent extends React.Component {
     state = {
@@ -51,7 +52,7 @@ export default class RegisterComponent extends React.Component {
         if (this.validate()) {
             const requestOptions = {
                 method: "POST",
-                headers: {"Content-Type": "application/json"},
+                headers: {"Content-Type": "application/json", 'Access-Control-Allow-Origin': '*'},
                 body: JSON.stringify({
                     name: this.state.name,
                     password: this.state.password,
@@ -138,8 +139,8 @@ export default class RegisterComponent extends React.Component {
                             {this.state.errorMessage}
                         </h3>
                         <div className={styles.buttons}>
-                            <button onClick={() => this.login()}>Register</button>
-                            <button onClick={() => this.reset()}>Reset</button>
+                            <Button onClick={() => this.login()}>Register</Button>
+                            <Button onClick={() => this.reset()}>Reset</Button>
                         </div>
                     </div>
                 </div>

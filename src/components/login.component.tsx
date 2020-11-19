@@ -10,12 +10,13 @@ export default class LoginComponent extends React.Component {
         name: "",
         password: "",
         errorMessage: "",
-        redirect: false
+        redirect: false,
+        redirectURL: ''
     };
 
     renderRedirect = () => {
         if (this.state.redirect) {
-            return <Redirect to={'/'}/>
+            return <Redirect to={'/' + this.state.redirectURL}/>
         }
     }
 
@@ -50,11 +51,15 @@ export default class LoginComponent extends React.Component {
             const data = await response.json();
             if (data.status_code === 'success') {
                 UserService.LogIn(data.api_key, data.user_id);
-                this.setState({redirect: true});
+                this.redirect('');
             } else {
                 this.setErrorMessage(data.message);
             }
         }
+    }
+
+    redirect(path: string) {
+        this.setState({redirectURL: path, redirect: true});
     }
 
     handleChange = (event: React.FormEvent<HTMLInputElement>) => {
@@ -99,9 +104,7 @@ export default class LoginComponent extends React.Component {
                         </h3>
                         <div className={styles.buttons}>
                             <Button onClick={() => this.login()}>Login</Button>
-                            <Link to={"/register"}>
-                                <Button>Register</Button>
-                            </Link>
+                            <Button onClick={() => this.redirect('register')}>Register</Button>
                         </div>
                     </div>
                 </div>

@@ -41,6 +41,7 @@ export default class UserService extends React.Component {
         header.append("Content-Type", "application/json");
         header.append("x-api-key", this.getAPIkey() as string);
         header.append("x-user-id", this.getUserId() as string);
+        // header.append('Access-Control-Allow-Origin', '*');
         return header;
     }
 }
