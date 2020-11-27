@@ -1,0 +1,65 @@
+POST http://127.0.0.1:5000/user HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Admin",
+    "password": "admin123",
+    "email": "dupa@dupa.pl"
+}
+
+###
+
+GET http://127.0.0.1:5000/user HTTP/1.1
+content-type: application/json
+
+###
+
+DELETE http://127.0.0.1:5000/user/4 HTTP/1.1
+content-type: application/json
+
+###
+
+PUT http://127.0.0.1:5000/user/4 HTTP/1.1
+content-type: application/json
+
+{
+    "name": "admin2",
+    "password": "admin123",
+    "email": "dupa@dupa.pl"
+}
+
+###
+
+POST http://127.0.0.1:5000/user/auth HTTP/1.1
+content-type: application/json
+
+{
+  "name": "admin1",
+  "password": "admin123"
+}
+
+###
+
+POST http://127.0.0.1:5000/user/auth HTTP/1.1
+content-type: application/json
+
+{
+  "name": "123123123",
+  "password": "admin123"
+}
+
+###
+
+DELETE http://127.0.0.1:5000/user/auth HTTP/1.1
+content-type: application/json
+user-api-key:
+
+###
+
+POST http://127.0.0.1:5000/table HTTP/1.1
+content-type: application/json
+
+{
+  "table_name": "Tabela 1",
+  "user_id": 1
+}
