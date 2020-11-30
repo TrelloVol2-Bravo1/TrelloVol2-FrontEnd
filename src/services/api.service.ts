@@ -9,7 +9,7 @@ export default class ApiService{
     static async GetTables() {
         const requestOptions = {
             method: 'GET',
-            headers: UserService.GetHeaders()
+            headers: UserService.getHeaders()
         };
 
         const tables = [];
@@ -26,7 +26,7 @@ export default class ApiService{
     static async DeleteTable(table: TableModel) {
         const requestOptions = {
             method: 'DELETE',
-            headers: UserService.GetHeaders()
+            headers: UserService.getHeaders()
         };
 
         const response = await fetch(ApiService.getURL() + 'table/' + table.getTableId(), requestOptions);
@@ -37,7 +37,7 @@ export default class ApiService{
     static async CreateTable(name: string) {
         const requestOptions = {
             method: 'POST',
-            headers: UserService.GetHeaders(),
+            headers: UserService.getHeaders(),
             body: JSON.stringify({
                 name: name
             }),

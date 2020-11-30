@@ -12,9 +12,10 @@ export default class HeaderComponent extends React.Component {
     }
 
     logout = () => {
-        UserService.LogOut();
-        this.setState({redirect: true});
-        this.setState({logged: false});
+        UserService.LogOut().then(() => {
+            this.setState({redirect: true});
+            this.setState({logged: false});
+        });
     }
 
     renderRedirect = () => {
@@ -30,13 +31,19 @@ export default class HeaderComponent extends React.Component {
             return <><Link to={'login'}>
                 <Button>Login</Button>
             </Link>
-            <Link to={'register'}>
-                <Button>Register</Button>
-            </Link></>;
+                <Link to={'register'}>
+                    <Button>Register</Button>
+                </Link></>;
         }
     }
 
     render() {
+        UserService.subject.subscribe(() => {
+            this.setState({
+                logged: UserService.IsAuthenticated(),
+                redirect: true
+            })
+        });
         return (
             <div className={styles.header}>
                 {this.getButtons()}
