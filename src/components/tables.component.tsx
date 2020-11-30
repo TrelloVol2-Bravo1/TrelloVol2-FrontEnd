@@ -5,13 +5,17 @@ import styles from "./tables.module.css";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import UserService from "../services/user.service";
+import {Redirect} from "react-router-dom";
 
 export default class TablesComponent extends React.Component {
 
     state = {
         refresh: false,
+        redirect: false,
         creationView: false,
-        newTableName: ''
+        newTableName: '',
+        redirectUrl: ''
     }
 
     tables: TableModel[] = [];
@@ -28,6 +32,13 @@ export default class TablesComponent extends React.Component {
             this.tables.splice(index, 1);
             this.refresh();
         }
+    }
+
+    private openTable(table: TableModel) {
+        this.setState({
+            redirectUrl: 'table/' + table.getTableId(),
+            redirect: true
+        })
     }
 
     private refresh(): void {
@@ -47,7 +58,9 @@ export default class TablesComponent extends React.Component {
                             {tab.getTableName()}
                         </Card.Title>
                         <div className={styles.btnGroup}>
-                            <Button className={styles.btn} variant={"success"}>Open</Button>
+                            <Button className={styles.btn} onClick={() => {
+                                this.openTable(tab);
+                            }} variant={"success"}>Open</Button>
                             <Button className={styles.btn} onClick={() => {
                                 this.deleteTable(tab);
                             }} variant={"danger"}>Delete</Button>
@@ -95,9 +108,20 @@ export default class TablesComponent extends React.Component {
         this.setState({creationView: status})
     }
 
+    renderRedirect = () => {
+        if (this.state.redirect) {
+            return <Redirect to={'/'  + this.state.redirectUrl}/>
+        }
+    }
 
     render() {
+        UserService.subject.subscribe(() => {
+           this.setState({
+               redirect: true,
+           })
+        });
         return (<>
+            {this.renderRedirect()}
             <div className={styles.container}>
                 <div className={styles.creationForm}>
                     {this.createTableCreationView()}
