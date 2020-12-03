@@ -49,3 +49,18 @@
     flex-direction: column;
 
 }
+
+.listTitle {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.cardObject {
+ color: black;
+}
+
+.cardCreateButton {
+    width: 100%;
+    height: auto;
+}
