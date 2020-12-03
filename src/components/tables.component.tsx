@@ -28,15 +28,16 @@ export default class TablesComponent extends React.Component {
     private deleteTable(table: TableModel) {
         const index = this.tables.indexOf(table);
         if (index !== -1) {
-            ApiService.DeleteTable(table);
-            this.tables.splice(index, 1);
-            this.refresh();
+            ApiService.DeleteTable(table).then(() => {
+                this.tables.splice(index, 1);
+                this.refresh();
+            });
         }
     }
 
     private openTable(table: TableModel) {
         this.setState({
-            redirectUrl: 'table/' + table.getTableId(),
+            redirectUrl: `table/${table.getTableId()}`,
             redirect: true
         })
     }
@@ -49,8 +50,7 @@ export default class TablesComponent extends React.Component {
     private createTableView() {
         let table = [];
         if (this.state.refresh) {
-            let view: any[];
-            view = [];
+            let view: any[] = [];
             this.tables.forEach(tab => {
                 view.push(<Card className={styles.card}>
                     <Card.Body>
@@ -78,7 +78,6 @@ export default class TablesComponent extends React.Component {
         const table = new TableModel(response.id, response.name, response.author_id);
         this.tables.push(table);
         this.refresh();
-
     }
 
     handleChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -92,11 +91,14 @@ export default class TablesComponent extends React.Component {
             return (<>
                     <div className={styles.createNewButtonDiv}>
                         <Form.Group>
-                            <Form.Control name={'newTableName'} value={this.state.newTableName} onChange={this.handleChange.bind(this)} type="text" placeholder="New table name"/>
+                            <Form.Control name={'newTableName'} value={this.state.newTableName}
+                                          onChange={this.handleChange.bind(this)} type="text"
+                                          placeholder="New table name"/>
                         </Form.Group>
                     </div>
                     <div className={styles.createNewButtonDiv}>
-                        <Button onClick={() => this.createTable(this.state.newTableName)} variant={"success"}>Create</Button>
+                        <Button onClick={() => this.createTable(this.state.newTableName)}
+                                variant={"success"}>Create</Button>
                         <Button onClick={() => this.toggleCreationView(false)} variant={"danger"}>Hide</Button>
                     </div>
                 </>
@@ -110,15 +112,15 @@ export default class TablesComponent extends React.Component {
 
     renderRedirect = () => {
         if (this.state.redirect) {
-            return <Redirect to={'/'  + this.state.redirectUrl}/>
+            return <Redirect to={'/' + this.state.redirectUrl}/>
         }
     }
 
     render() {
         UserService.subject.subscribe(() => {
-           this.setState({
-               redirect: true,
-           })
+            this.setState({
+                redirect: true,
+            })
         });
         return (<>
             {this.renderRedirect()}

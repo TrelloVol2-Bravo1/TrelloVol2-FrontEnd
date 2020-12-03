@@ -17,8 +17,8 @@ export default class Router extends React.Component {
                 <Switch>
                     <AnonymousRoute path={'/login'} component={LoginComponent}/>
                     <AnonymousRoute path={'/register'} component={RegisterComponent}/>
-                    <PrivateRoute path={'/table'} component={TableComponent} />
-                    <PrivateRoute path={'/'} component={TablesComponent} />
+                    <PrivateRoute path={'/table/:id'} component={TableComponent}/>
+                    <PrivateRoute path={'/'} component={TablesComponent}/>
                 </Switch>
             </BrowserRouter>
         );
