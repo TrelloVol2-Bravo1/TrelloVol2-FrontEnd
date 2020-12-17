@@ -83,6 +83,7 @@ export default class ApiService{
 
         const response = await fetch(ApiService.getURL() + 'table', requestOptions);
         const data = await  response.json();
+        console.log(data);
         return data.table;
     }
 
@@ -132,5 +133,83 @@ export default class ApiService{
             cards.push(card);
         }
         return cards;
+    }
+
+    static async ConnectUserToCard(user: number, card: number) {
+        const requestOptions = {
+            method: 'POST',
+            headers: UserService.getHeaders(),
+            body: JSON.stringify({
+                user_id: user,
+                card_id: card
+            })
+        }
+
+        const response = await fetch(`${ApiService.getURL()}` + 'cardMember', requestOptions);
+        const data = await response.json();
+        return data.status_code === 'success';
+    }
+
+    static async GetUserName(id: number) {
+        const requestOptions = {
+            method: 'GET',
+            headers: UserService.getHeaders()
+        }
+
+        const response = await fetch(`${ApiService.getURL()}username/${id}`, requestOptions);
+        const data = await response.json();
+        return data.username;
+    }
+
+    static async GetUserIDs(id: number) {
+        const requestOptions = {
+            method: 'GET',
+            headers: UserService.getHeaders()
+        }
+
+        const userIDs = [];
+
+        const response = await fetch(`${ApiService.getURL()}cardMembers/${id}`, requestOptions);
+        const data = await response.json();
+
+        for (let i = 0; i < data.data.length; i++) {
+            userIDs.push(data.data[i].user_id);
+        }
+
+        return userIDs;
+    }
+
+    static async EditCard(id: number, name: string, description: string) {
+        const requestOptions = {
+            method: 'PUT',
+            headers: UserService.getHeaders(),
+            body: JSON.stringify({
+                card_name: name,
+                card_description: description
+            }),
+        };
+
+        const response = await fetch(`${ApiService.getURL()}card/${id}`, requestOptions);
+        const data = await  response.json();
+        return data.status_code === 'success';
+    }
+
+    static async EditList(id: number, name: string, table_id: number) {
+        const requestOptions = {
+            method: 'PUT',
+            headers: UserService.getHeaders(),
+            body: JSON.stringify({
+                list_name: name,
+                table_id: table_id,
+                list_id: id,
+                is_archived: 0,
+                list_order: 5
+            }),
+        };
+
+        const response = await fetch(`${ApiService.getURL()}list/${id}`, requestOptions);
+        const data = await response.json();
+        console.log(data);
+        return true;
     }
 }

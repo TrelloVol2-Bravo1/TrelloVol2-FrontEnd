@@ -9,4 +9,8 @@ export class ListModel {
     getListName(): string {
         return this.list_name;
     }
+
+    setName(name: string) {
+        this.list_name = name;
+    }
 }

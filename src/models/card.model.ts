@@ -1,4 +1,5 @@
 export class CardModel {
+
     constructor(private card_id: number, private list_id: number, private card_name: string, private card_description: string) {
     }
 
@@ -16,5 +17,13 @@ export class CardModel {
 
     getCardDescription(): string {
         return this.card_description
+    }
+
+    setName(name: string): void {
+        this.card_name = name;
+    }
+
+    setDescription(description: string): void {
+        this.card_description = description;
     }
 }

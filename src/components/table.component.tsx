@@ -20,11 +20,13 @@ export default class TablesComponent extends React.Component {
         objectToCreate: '',
         newCardName: '',
         description: '',
+        objectAction: '',
         list_id: 0
     }
 
     lists: ListModel[] = [];
     cards: CardModel[] = [];
+    cardMembers = new Map();
 
     private refresh(): void {
         this.setState({refresh: false});
@@ -49,6 +51,15 @@ export default class TablesComponent extends React.Component {
             }
         }
         this.cards = buffer;
+        for (const card of this.cards) {
+            const response = await ApiService.GetUserIDs(card.getCardID());
+            const userNames = [];
+            for (let i = 0; i < response.length; i++) {
+                userNames.push(await ApiService.GetUserName(response[i]));
+            }
+            this.cardMembers.set(card.getCardID(), userNames);
+        }
+        console.log(this.cardMembers);
         this.refresh();
     }
 
@@ -62,11 +73,14 @@ export default class TablesComponent extends React.Component {
                         <Card.Title className={styles.listTitle}>
                             {list.getListName()}
                             <Button className={styles.cardButton} onClick={() => {
+                                this.toggleCreationView(true, 'list', list.getListID(), 'edit');
+                            }} variant={"primary"}>Edit</Button>
+                            <Button className={styles.cardButton} onClick={() => {
                                 this.deleteList(list);
                             }} variant={"danger"}>Delete</Button>
                         </Card.Title>
                         {this.createCards(list.getListID())}
-                        <Button className={styles.cardCreateButton} onClick={() => {this.toggleCreationView(true, 'card', list.getListID())}}>Create new card</Button>
+                        <Button className={styles.cardCreateButton} onClick={() => {this.toggleCreationView(true, 'card', list.getListID(), 'create')}}>Create new card</Button>
                     </Card.Body>
                 </Card>)
             });
@@ -79,13 +93,13 @@ export default class TablesComponent extends React.Component {
         UserService.subject.subscribe(() => {
             this.setState({
                 redirect: true,
-                redirectUrl: '/login'
+                redirectUrl: 'login'
             })
         });
         return <>
             {this.renderRedirect()}
             <Button onClick={() => this.handleBackToBoards()}>Back to boards</Button>
-            <Button onClick={() => this.toggleCreationView(true, 'list', -1)}>New list</Button>
+            <Button onClick={() => this.toggleCreationView(true, 'list', -1, 'create')}>New list</Button>
             <div className={styles.container}>
                 <div className={styles.creationForm}>
                     {this.createListCreationView()}
@@ -118,7 +132,7 @@ export default class TablesComponent extends React.Component {
     }
 
     private createListCreationView() {
-        if (this.state.creationView && this.state.objectToCreate === 'list') {
+        if (this.state.creationView && this.state.objectToCreate === 'list' && this.state.objectAction === 'create') {
             return (<>
                     <div className={styles.createNewButtonDiv}>
                         <Form.Group>
@@ -130,11 +144,11 @@ export default class TablesComponent extends React.Component {
                     <div className={styles.createNewButtonDiv}>
                         <Button onClick={() => this.createList(this.state.newListName)}
                                 variant={"success"}>Create</Button>
-                        <Button onClick={() => this.toggleCreationView(false, '', -1)} variant={"danger"}>Hide</Button>
+                        <Button onClick={() => this.toggleCreationView(false, '', -1, '')} variant={"danger"}>Hide</Button>
                     </div>
                 </>
             );
-        } else if (this.state.creationView && this.state.objectToCreate === 'card') {
+        } else if (this.state.creationView && this.state.objectToCreate === 'card' && this.state.objectAction === 'create') {
             return (<>
                     <div className={styles.createNewButtonDiv}>
                         <Form.Group>
@@ -149,15 +163,56 @@ export default class TablesComponent extends React.Component {
                     <div className={styles.createNewButtonDiv}>
                         <Button onClick={() => this.createCard(this.state.newCardName, this.state.description, this.state.list_id)}
                                 variant={"success"}>Create</Button>
-                        <Button onClick={() => this.toggleCreationView(false, '', -1)} variant={"danger"}>Hide</Button>
+                        <Button onClick={() => this.toggleCreationView(false, '', -1, '')} variant={"danger"}>Hide</Button>
+                    </div>
+                </>
+            );
+        } else if (this.state.creationView && this.state.objectToCreate === 'card' && this.state.objectAction === 'edit') {
+            const card = this.cards.filter(item => item.getCardID() === this.state.list_id);
+            return (<>
+                    <div className={styles.createNewButtonDiv}>
+                        <Form.Group>
+                            <Form.Control name={'newCardName'}
+                                          onChange={this.handleChange.bind(this)} defaultValue={card[0].getCardName()} type="text"
+                                          placeholder="Edit card name"/>
+                            <Form.Control name={'description'}
+                                          onChange={this.handleChange.bind(this)} defaultValue={card[0].getCardDescription()} type="text"
+                                          placeholder="Edit description"/>
+                        </Form.Group>
+                    </div>
+                    <div className={styles.createNewButtonDiv}>
+                        <Button
+                            onClick={() => this.editCard(card[0].getCardID(), this.state.newCardName, this.state.description)}
+                            variant={"success"}>Edit</Button>
+                        <Button onClick={() => this.toggleCreationView(false, '', -1, '')}
+                                variant={"danger"}>Hide</Button>
+                    </div>
+                </>
+            );
+        } else if (this.state.creationView && this.state.objectToCreate === 'list' && this.state.objectAction === 'edit') {
+            const list = this.lists.filter(item => item.getListID() === this.state.list_id);
+            return (<>
+                    <div className={styles.createNewButtonDiv}>
+                        <Form.Group>
+                            <Form.Control name={'newCardName'}
+                                          onChange={this.handleChange.bind(this)} defaultValue={list[0].getListName()} type="text"
+                                          placeholder="Edit list name"/>
+                        </Form.Group>
+                    </div>
+                    <div className={styles.createNewButtonDiv}>
+                        <Button
+                            onClick={() => this.editList(list[0].getListID(), this.state.newCardName, +window.location.pathname.split('/')[2])}
+                            variant={"success"}>Edit</Button>
+                        <Button onClick={() => this.toggleCreationView(false, '', -1, '')}
+                                variant={"danger"}>Hide</Button>
                     </div>
                 </>
             );
         }
     }
 
-    private toggleCreationView(status: boolean, object: string, list_id: number) {
-        this.setState({creationView: status, objectToCreate: object, list_id: list_id})
+    private toggleCreationView(status: boolean, object: string, list_id: number, action: string) {
+        this.setState({creationView: status, objectToCreate: object, list_id: list_id, objectAction: action})
     }
 
     private renderRedirect() {
@@ -178,13 +233,20 @@ export default class TablesComponent extends React.Component {
                                 {card.getCardName()}
                             </Card.Title>
                             <p>{card.getCardDescription()}</p>
+                            {this.getCardMembers(card.getCardID())}
                             <div className={styles.btnGroup}>
                                 <Button className={styles.cardButton} onClick={() => {
                                     this.deleteCard(card);
                                 }} variant={"danger"}>Delete</Button>
+                                <Button className={styles.cardButton} onClick={() => {
+                                    this.toggleCreationView(true, 'card', card.getCardID(), 'edit');
+                                }} variant={"primary"}>Edit</Button>
+                                <Button className={styles.cardButton} onClick={() => {
+                                    this.addUser(card);
+                                }} variant={"info"}>Add user</Button>
                             </div>
                         </Card.Body>
-                    </Card>)
+                    </Card>);
                 }
             });
             cards.push(view);
@@ -209,6 +271,46 @@ export default class TablesComponent extends React.Component {
                 this.lists.splice(index, 1);
                 this.refresh();
             });
+        }
+    }
+
+    private addUser(card: CardModel) {
+        ApiService.ConnectUserToCard(2, card.getCardID());
+    }
+
+    private getCardMembers(cardID: number) {
+        const array = this.cardMembers.get(cardID);
+        let view: any[] = [];
+        for (let i = 0; i < array.length; i++) {
+            view.push(<p className={styles.redText}>{array[i]}</p>);
+        }
+        return view;
+    }
+
+    private async editCard(id: number, name: string, description: string) {
+        const response = await ApiService.EditCard(id, name, description);
+        if (response) {
+            this.cards.map(item => {
+                if (item.getCardID() === id) {
+                    item.setName(name);
+                    item.setDescription(description);
+                    return item;
+                }
+            });
+            this.refresh();
+        }
+    }
+
+    private async editList(id: number, name: string, table_id: number) {
+        const response = await ApiService.EditList(id, name, table_id);
+        if (response) {
+            this.lists.map(item => {
+                if (item.getListID() === id) {
+                    item.setName(name);
+                    return item;
+                }
+            });
+            this.refresh();
         }
     }
 }

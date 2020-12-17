@@ -39,7 +39,7 @@ export default class LoginComponent extends React.Component {
       const url = ApiService.getURL() + "user/auth";
       const requestOptions = {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: UserService.getHeaders(),
         body: JSON.stringify({
           name: this.state.name,
           password: this.state.password,

@@ -3,6 +3,7 @@ import styles from "../styles.module.css";
 import {Redirect} from "react-router-dom";
 import ApiService from "../services/api.service";
 import Button from "react-bootstrap/Button";
+import UserService from "../services/user.service";
 
 export default class RegisterComponent extends React.Component {
     state = {
@@ -52,7 +53,7 @@ export default class RegisterComponent extends React.Component {
         if (this.validate()) {
             const requestOptions = {
                 method: "POST",
-                headers: {"Content-Type": "application/json", 'Access-Control-Allow-Origin': '*'},
+                headers: UserService.getHeaders(),
                 body: JSON.stringify({
                     name: this.state.name,
                     password: this.state.password,
