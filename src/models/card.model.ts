@@ -39,6 +39,10 @@ export class CardModel {
         this.card_description = description;
     }
 
+    setCardListID(value: number): void {
+        this.list_id = value;
+    }
+
     ifArchived(): boolean {
         return this.is_archived === 1;
     }

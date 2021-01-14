@@ -333,6 +333,21 @@ export default class ApiService{
             return data.status_code === 'success';
         }
     }
+
+    static async ChangeCardOnListOrder(first: CardModel, listID: number) {
+        const requestOptionsForLeft = {
+            method: 'PUT',
+            headers: UserService.getHeaders(),
+            body: JSON.stringify({
+                list_id: listID
+            }),
+        };
+
+        const response = await fetch(`${ApiService.getURL()}card/${first.getCardID()}`, requestOptionsForLeft);
+        const data = await response.json();
+
+        return data.status_code === 'success';
+    }
 }
 
 function compare(a: string | number, b: string | number, isAsc: boolean) {

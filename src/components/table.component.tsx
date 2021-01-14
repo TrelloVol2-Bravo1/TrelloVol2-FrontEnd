@@ -110,12 +110,12 @@ export default class TablesComponent extends React.Component {
                     <Dropdown.Item onClick={() => {
                         this.changeCardOrder(card, 1);
                     }}>Move down</Dropdown.Item>
-                    {/*<Dropdown.Item onClick={() => {*/}
-                    {/*    this.changeCardList(card, -1);*/}
-                    {/*}}>Move to previous list</Dropdown.Item>*/}
-                    {/*<Dropdown.Item onClick={() => {*/}
-                    {/*    this.changeCardList(card, 1);*/}
-                    {/*}}>Move to next list</Dropdown.Item>*/}
+                    <Dropdown.Item onClick={() => {
+                        this.changeCardList(card, -1);
+                    }}>Move to previous list</Dropdown.Item>
+                    <Dropdown.Item onClick={() => {
+                        this.changeCardList(card, 1);
+                    }}>Move to next list</Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>
         </>;
@@ -255,6 +255,18 @@ export default class TablesComponent extends React.Component {
             return -1;
         } else {
             return this.lists[this.lists.length - 1].getListOrder();
+        }
+    }
+
+    private getFirstOrderIndex(): number {
+        let lists = this.lists;
+        if (this.lists.length <= 0) {
+            return 0;
+        } else {
+            lists = this.lists.sort((a, b) => {
+                return compare(a.getListOrder(), b.getListOrder(), false);
+            });
+            return lists[lists.length - 1].getListOrder();
         }
     }
 
@@ -735,14 +747,46 @@ export default class TablesComponent extends React.Component {
     }
 
     private changeCardList(card: CardModel, step: number) {
+
+        const first = this.lists.find(list => {
+           return list.getListID() === card.getCardListID();
+        });
+
+        if (first instanceof ListModel) {
+            // if (first.getListOrder() === this.getLastOrderIndex() && step > 0) {
+            //     return;
+            // } else if (first.getListOrder() === this.getFirstOrderIndex() && step < 0) {
+            //     return;
+            // }
+
+            let second: ListModel | undefined = undefined;
+
+            if (first instanceof ListModel) {
+                for (let i = 1; second === undefined; i++) {
+                    second = this.lists.find(searched => {
+                        return searched.getListOrder() === (first.getListOrder() + (i * step));
+                    });
+                }
+
+                if (second) {
+                    ApiService.ChangeCardOnListOrder(card, second.getListID()).then(r => {
+                        if (second instanceof ListModel) {
+                            card.setCardListID(second.getListID());
+                            this.refresh();
+                        }
+                    });
+                }
+            }
+        }
+
+
         // if (card.getCardOrder() === this.getCardLastOrderIndex(card.getCardListID()) && step > 0) {
         //     return;
         // } else if (card.getCardOrder() === this.getCardFirstOrderIndex(card.getCardListID()) && step < 0) {
         //     return;
         // }
-        // const list1 = this.lists
 
-        let second: ListModel | undefined = undefined;
+
         //
         // for (let i = 1; second === undefined; i++) {
         //     second = this.lists.find(searched => {
