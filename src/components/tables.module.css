@@ -8,6 +8,29 @@
     flex-wrap: wrap;
 }
 
+.tableH1 {
+    text-align: center;
+}
+
+.archivedTables {
+    margin-top: 20px;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    border: 2px gray solid;
+}
+
+
+.tableTitle {
+    display: flex;
+    flex-direction: row;
+}
+
 .card {
     height: 100%;
     padding-bottom: 20px;
