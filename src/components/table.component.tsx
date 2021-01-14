@@ -110,6 +110,12 @@ export default class TablesComponent extends React.Component {
                     <Dropdown.Item onClick={() => {
                         this.changeCardOrder(card, 1);
                     }}>Move down</Dropdown.Item>
+                    {/*<Dropdown.Item onClick={() => {*/}
+                    {/*    this.changeCardList(card, -1);*/}
+                    {/*}}>Move to previous list</Dropdown.Item>*/}
+                    {/*<Dropdown.Item onClick={() => {*/}
+                    {/*    this.changeCardList(card, 1);*/}
+                    {/*}}>Move to next list</Dropdown.Item>*/}
                 </Dropdown.Menu>
             </Dropdown>
         </>;
@@ -663,7 +669,6 @@ export default class TablesComponent extends React.Component {
     }
 
     private changeCardOrder(card: CardModel, step: number) {
-        console.log(this.cards);
         if (card.getCardOrder() === this.getCardLastOrderIndex(card.getCardListID()) && step > 0) {
             return;
         } else if (card.getCardOrder() === this.getCardFirstOrderIndex(card.getCardListID()) && step < 0) {
@@ -727,6 +732,35 @@ export default class TablesComponent extends React.Component {
 
     private getIntDate(cardDeadline: Date): number {
         return new Date(cardDeadline).getTime();
+    }
+
+    private changeCardList(card: CardModel, step: number) {
+        // if (card.getCardOrder() === this.getCardLastOrderIndex(card.getCardListID()) && step > 0) {
+        //     return;
+        // } else if (card.getCardOrder() === this.getCardFirstOrderIndex(card.getCardListID()) && step < 0) {
+        //     return;
+        // }
+        // const list1 = this.lists
+
+        let second: ListModel | undefined = undefined;
+        //
+        // for (let i = 1; second === undefined; i++) {
+        //     second = this.lists.find(searched => {
+        //         return searched.getListOrder() === (card.getCardOrder() + (i * step)) && searched.getCardListID() === card.getCardListID();
+        //     });
+        // }
+
+        // if (second) {
+        //     ApiService.SwapCardOrder(card, second).then(r => {
+        //         if (second instanceof CardModel) {
+        //             const firstOrder = card.getCardOrder();
+        //             const secondOrder = second.getCardOrder();
+        //             card.setCardOrder(secondOrder);
+        //             second.setCardOrder(firstOrder);
+        //             this.refresh();
+        //         }
+        //     });
+        // }
     }
 }
 

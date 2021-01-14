@@ -316,6 +316,23 @@ export default class ApiService{
 
         return dataForLeft.status_code === dataForRight.status_code && dataForLeft.status_code === 'success';
     }
+
+    static async ConnectUserToTable(tableId: number | undefined, newUser: string) {
+        if (tableId) {
+            const requestOptions = {
+                method: 'POST',
+                headers: UserService.getHeaders(),
+                body: JSON.stringify({
+                    table_id: tableId,
+                    user_name: newUser
+                })
+            }
+
+            const response = await fetch(`${ApiService.getURL()}` + 'tablemember', requestOptions);
+            const data = await response.json();
+            return data.status_code === 'success';
+        }
+    }
 }
 
 function compare(a: string | number, b: string | number, isAsc: boolean) {
