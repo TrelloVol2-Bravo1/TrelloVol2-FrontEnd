@@ -223,8 +223,8 @@ export default class ApiService{
                 card_name: name,
                 card_description: description,
                 is_archived: is_archived,
-                card_order: card_order,
-                card_deadline: '30/12/2000 15:15:45'
+                card_order: card_order
+                // card_deadline: ApiService.getDate(card_deadline)
             }),
         };
 
